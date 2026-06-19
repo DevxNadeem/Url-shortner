@@ -1,55 +1,67 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function Login() {
-  const [form, setForm] = useState({ email: '', password: '' })
-  const navigate = useNavigate()
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      })
-      const data = await res.json()
-      console.log(data)
-      navigate('/dashboard')
+      await login(email, password);
+      navigate("/dashboard");
     } catch (err) {
-      console.error(err)
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className='register-cntr'>
-      <div className='register-box'>
-        <div className='register-header'>
-          <h2>Welcome back</h2>
-          <p>Login to your account</p>
-        </div>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Welcome back</h2>
+        <p className="subtitle">Log in to manage your links</p>
 
-        <div className='register-form'>
-          <div className='form-group'>
+        {error && <div className="error-msg">{error}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
             <label>Email</label>
-            <input type="email" name="email" placeholder="john@example.com" onChange={handleChange} />
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
-          <div className='form-group'>
+          <div className="form-group">
             <label>Password</label>
-            <input type="password" name="password" placeholder="••••••••" onChange={handleChange} />
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
-          <button className='register-btn' onClick={handleSubmit}>Login</button>
-        </div>
+          <button className="btn-primary" type="submit" disabled={loading}>
+            {loading ? "Logging in…" : "Log in"}
+          </button>
+        </form>
 
-        <p className='register-login'>
-          Don't have an account? <a href="/register">Register</a>
-        </p>
+        <div className="auth-footer">
+          No account? <Link to="/register">Create one</Link>
+        </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default Login

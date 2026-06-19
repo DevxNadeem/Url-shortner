@@ -1,0 +1,19 @@
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text);
+}
+
+@media (max-width: 600px) {
+  .footer { flex-direction: column; gap: 6px; text-align: center; }
+}

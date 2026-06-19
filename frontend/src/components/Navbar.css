@@ -1,0 +1,88 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.logo-icon {
+  font-size: 1.1rem;
+}
+
+.logo-text {
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link {
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  color: var(--muted);
+  transition: color var(--transition), background var(--transition);
+  font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.nav-btn-cta {
+  padding: 8px 18px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  transition: background var(--transition);
+  margin-left: 6px;
+}
+
+.nav-btn-cta:hover {
+  background: var(--accent-hover);
+}
+
+.nav-btn-logout {
+  padding: 7px 14px;
+  background: transparent;
+  color: var(--muted);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color var(--transition), background var(--transition);
+}
+
+.nav-btn-logout:hover {
+  color: var(--danger);
+  background: var(--danger-dim);
+}
+
+@media (max-width: 600px) {
+  .navbar { padding: 0 20px; }
+  .nav-link { padding: 6px 10px; font-size: 0.85rem; }
+}

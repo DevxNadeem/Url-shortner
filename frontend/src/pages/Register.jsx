@@ -1,59 +1,83 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
-  const navigate = useNavigate()
+export default function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      })
-      const data = await res.json()
-      console.log(data)
-      navigate('/login')
+      await register(name, email, password);
+      setSuccess("Account created! Redirecting to login…");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      console.error(err)
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className='register-cntr'>
-      <div className='register-box'>
-        <div className='register-header'>
-          <h2>Create an account</h2>
-          <p>Start shortening your links today</p>
-        </div>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>Create account</h2>
+        <p className="subtitle">Start shortening URLs for free</p>
 
-        <div className='register-form'>
-          <div className='form-group'>
+        {error && <div className="error-msg">{error}</div>}
+        {success && <div className="success-msg">{success}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
             <label>Name</label>
-            <input type="text" name="name" placeholder="John Doe" onChange={handleChange} />
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
-          <div className='form-group'>
+          <div className="form-group">
             <label>Email</label>
-            <input type="email" name="email" placeholder="john@example.com" onChange={handleChange} />
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
-          <div className='form-group'>
+          <div className="form-group">
             <label>Password</label>
-            <input type="password" name="password" placeholder="••••••••" onChange={handleChange} />
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+            />
           </div>
-          <button className='register-btn' onClick={handleSubmit}>Register</button>
-        </div>
+          <button className="btn-primary" type="submit" disabled={loading}>
+            {loading ? "Creating account…" : "Create account"}
+          </button>
+        </form>
 
-        <p className='register-login'>
-          Already have an account? <a href="/login">Login</a>
-        </p>
+        <div className="auth-footer">
+          Already have an account? <Link to="/login">Log in</Link>
+        </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default Register
