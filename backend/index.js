@@ -17,8 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 ConnectDb();
 
-
 app.use("/", authRoutes);
+app.use("/" , urlRoutes);
 app.use("/", urlRoutes);
 
 app.listen(3000, () => {

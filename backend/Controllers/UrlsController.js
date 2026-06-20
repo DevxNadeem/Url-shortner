@@ -29,9 +29,19 @@ async function DeleteUrl(req, res) {
       console.log("error"  ,error);
     }
 };
+async function geturls(req ,res) {
+    try{
+      const urls = await findone({userId : req.user._id }).sort({ createdAt: -1 });
+       res.status(200).json(urls);
+    }catch(e){
+        console.log("error" ,e);
+    }
+    
+} ;
 
 module.exports = {
     shorten,
     Urlredirect,
-    DeleteUrl
+    DeleteUrl , 
+    geturls
 }
